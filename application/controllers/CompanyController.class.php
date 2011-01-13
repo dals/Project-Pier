@@ -49,6 +49,7 @@
     * @return null
     */
     function view_client() {
+      $this->addHelper('textile');
       $this->setTemplate('view_company');
       
       if (!logged_user()->isAdministrator(owner_company())) {

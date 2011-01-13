@@ -3,23 +3,23 @@
   /**
   * Dashboard interface langs
   *
-  * @version 1.0
   * @http://www.projectpier.org/
   */
   
   // Return langs
   return array(
-    'new ProjectPier version available' => 'A new version of ProjectPier is available. <a href="%s">More details</a>.',
+    'new version available' => 'A new version of ProjectPier is available. <a href="%s">More details</a>.',
     
     'my tasks' => 'My tasks',
     'welcome back' => 'Welcome back <strong>%s</strong>',
-    
+
     'online users' => 'Online users',
-    'online users desc' => 'Users who were active in last 15 minutes:',
+    'online users desc' => 'Users active in last 15 minutes:',
     
     'dashboard' => 'Dashboard',
     'administration' => 'Administration',
     'my account' => 'My account',
+    'my settings' => 'My settings',
     
     'my projects' => 'My projects',
     'my projects archive desc' => 'List of finished (archived) projects. All actions for these projects are locked, but you can still browse them.',
@@ -33,9 +33,12 @@
     'is administrator' => 'Administrator',
     'is auto assign' => 'Auto-assign to new projects?',
     'auto assign' => 'Auto-assign',
-    'administrator update profile notice' => 'Administration options (available only to administrators!)',
+    'administrator update profile notice' => 'Admin options (available only to administrators!)',
     
     'project completed on by' => 'Completed on %s by %s',
+
+    'use LDAP' => 'Authenticate using LDAP',
+    'LDAP' => 'LDAP Authentication',
     
     'im service' => 'Service',
     'primary im service' => 'Primary IM',
@@ -100,11 +103,18 @@
     'new account step3 info' => 'Now it\'s time to <a href="%s">define client companies</a> (unlimited). When you\'re done you can add their members or leave that for their team leaders. Client members are similar to your company members except that they have limited access to content and functions (you can set what they can do per project and per member)',
     'new account step4' => 'Step 4: Start a project',
     'new account step4 info' => 'Defining a <a href="%s">new project</a> is really easy: set a name and description (optional) and click submit. After that you can set permissions for your team members and clients.',
+    'add welcome task text' => 'Hello %s, welcome to your new account. Please update your profile within 7 days here %s.',
+    'add welcome task' => 'Add a task to the Welcome project',
+    'add welcome task desc' => 'A task is added to the task list of the Welcome project with a welcome text and instructions to update his/her profile.',
     
     // Application log
+    'application log events my projects' => 'Events for my projects',
+    'application log type column name' => 'Type',
+    'application log date column name' => 'Date',
     'application log details column name' => 'Details',
     'application log project column name' => 'Project',
     'application log taken on column name' => 'Taken on, by',
+    'application log by column name' => 'By',
     
     // RSS
     'rss feeds' => 'RSS feeds',

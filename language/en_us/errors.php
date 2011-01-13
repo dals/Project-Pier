@@ -16,7 +16,7 @@
    
     // Company validation errors
     'company name required' => 'Company / organization name is required',
-    'company homepage invalid' => 'Homepage value is not a valid URL',
+    'company homepage invalid' => 'Homepage value is not a valid URL (http://www.example.com)',
     
     // User validation errors
     'username value required' => 'Username value is required',
@@ -28,6 +28,7 @@
     'passwords dont match' => 'Passwords don\'t match',
     'old password required' => 'Old password value is required',
     'invalid old password' => 'Old password is not valid',
+    'user homepage invalid' => 'Homepage value is not a valid URL (http://www.example.com)',
     
     // Avatar
     'invalid upload type' => 'Invalid file type. Allowed types are %s',
@@ -62,38 +63,14 @@
     // Add milestone form
     'milestone name required' => 'Milestone name value is required',
     'milestone due date required' => 'Milestone due date value is required',
-    
+
     // Add task list
     'task list name required' => 'Task list name value is required',
     'task list name unique' => 'Task list name must be unique in project',
     
     // Add task
     'task text required' => 'Task text is required',
-    
-    // Add project form
-    'form name required' => 'Form name is required',
-    'form name unique' => 'Form name must be unique',
-    'form success message required' => 'Success message is required',
-    'form action required' => 'Form action is required',
-    'project form select message' => 'Please select message',
-    'project form select task lists' => 'Please select task list',
-    
-    // Submit project form
-    'form content required' => 'Please insert content into text field',
-    
-    // Validate project folder
-    'folder name required' => 'Folder name is required',
-    'folder name unique' => 'Folder name needs to be unique in this project',
-    
-    // Validate add / edit file form
-    'folder id required' => 'Please select folder',
-    'filename required' => 'Filename is required',
-    
-    // File revisions (internal)
-    'file revision file_id required' => 'Revision needs to be connected with a file',
-    'file revision filename required' => 'Filename required',
-    'file revision type_string required' => 'Unknown file type',
-    
+
     // Test mail settings
     'test mail recipient required' => 'Recipient address is required',
     'test mail recipient invalid format' => 'Invalid recipient address format',

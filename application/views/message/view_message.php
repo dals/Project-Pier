@@ -17,8 +17,9 @@
         <?php echo do_textile($message->getText()) ?>
         <p><a href="<?php echo $message->getViewUrl() ?>"><?php echo lang('read more') ?></a></p>
       </div>
-    
+<?php if (plugin_active('files')) { ?>    
     <?php echo render_object_files($message, $message->canEdit(logged_user())) ?>
+<?php } // if ?>
       <div class="messageCommentCount">
 <?php if ($message->countComments()) { ?>
         <span><?php echo lang('comments') ?>:</span> <a href="<?php echo $message->getViewUrl() ?>#objectComments"><?php echo $message->countComments() ?></a>
@@ -26,9 +27,11 @@
         <span><?php echo lang('comments') ?>:</span> <?php echo $message->countComments() ?>
 <?php } // if ?>
       </div>
+<?php if (plugin_active('tags')) { ?>
       <div class="messageTags">
         <span><?php echo lang('tags') ?>:</span> <?php echo project_object_tags($message, $message->getProject()) ?>
       </div>    
+<?php } // if ?>
 <?php
   $options = array();
   if ($message->canEdit(logged_user())) {

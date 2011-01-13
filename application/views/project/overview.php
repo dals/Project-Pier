@@ -1,26 +1,18 @@
 <?php
-
+  trace(__FILE__,"set_page_title(lang('overview')");
   set_page_title(lang('overview'));
-  project_tabbed_navigation();
+  trace(__FILE__,"project_crumbs(lang('overview'))");
   project_crumbs(lang('overview'));
-  if (ProjectMessage::canAdd(logged_user(), active_project())) {
-    add_page_action(lang('add message'), get_url('message', 'add'));
-  } // if
-  if (ProjectTaskList::canAdd(logged_user(), active_project())) {
-    add_page_action(lang('add task list'), get_url('task', 'add_list'));
-  } // if
-  if (ProjectMilestone::canAdd(logged_user(), active_project())) {
-    add_page_action(lang('add milestone'), get_url('milestone', 'add'));
-  } // if
-  if (ProjectFile::canAdd(logged_user(), active_project())) {
-    add_page_action(lang('add file'), get_url('files', 'add_file'));
-  } // if
-  
   add_stylesheet_to_page('project/project_log.css');
-
+  trace(__FILE__,'stylesheet added');
 ?>
+<?php $this->includeTemplate(get_template_path('project/pageactions')); ?>
 <?php if (trim(active_project()->getDescription()) && active_project()->getShowDescriptionInOverview()) { ?>
+<?php $show_icon = (config_option('files_show_icons', '1') == '1'); ?>
 <div class="hint">
+<?php if ($show_icon) { ?>
+    <div class="projectLogo"><img src="<?php echo active_project()->getLogoUrl() ?>" alt="<?php echo active_project()->getName() ?>" /></div>
+<?php } // if ?>
   <div class="header"><?php echo clean(active_project()->getName()) ?></div>
   <div class="content"><?php echo do_textile(active_project()->getDescription()) ?></div>
 </div>
@@ -77,7 +69,7 @@
 
 <?php } else { ?>
     </ul>
-    <p><a href="<?php echo active_project()->getMilestonesUrl() ?>#upcomingMilestones">&raquo; <?php echo lang('show all upcoming milestones', count($upcoming_milestones)) ?></a></p>
+    <p><a href="<?php echo active_project()->getMilestonesUrl() ?>#upcomingMilestones"> <?php echo lang('show all upcoming milestones', count($upcoming_milestones)) ?></a></p>
 <?php break; ?>
 <?php } // foreach ?>
 
@@ -93,3 +85,4 @@
 <?php } else { ?>
 <?php echo lang('no activities in project') ?>
 <?php } // if ?>
+<?php trace(__FILE__,'end'); ?>

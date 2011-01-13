@@ -2,7 +2,10 @@
 
   set_page_title(lang('milestones'));
   project_tabbed_navigation(PROJECT_TAB_MILESTONES);
-  project_crumbs(lang('milestones'));
+  project_crumbs(array(
+    array(lang('milestones'), get_url('milestone', 'index')),
+    array(lang('index'))
+  ));
   if (ProjectMilestone::canAdd(logged_user(), active_project())) {
     add_page_action(lang('add milestone'), get_url('milestone', 'add'));
   } // if

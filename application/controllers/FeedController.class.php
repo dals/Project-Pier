@@ -82,17 +82,20 @@
       $logged_user = $this->loginUserByToken();
       if (!($logged_user instanceof User)) {
         header("HTTP/1.0 404 Not Found");
+        session_write_close();
         die();
       } // if
       
       $project = Projects::findById(array_var($_GET, 'project'));
       if (!($project instanceof Project)) {
         header("HTTP/1.0 404 Not Found");
+        session_write_close();
         die();
       } // if
       
       if (!$logged_user->isProjectUser($project)) {
         header("HTTP/1.0 404 Not Found");
+        session_write_close();
         die();
       } // if
       
@@ -122,10 +125,12 @@
       $user = $this->loginUserByToken();
       if (!($user instanceof User)) {
         header('HTTP/1.0 404 Not Found');
+        session_write_close();
         die();
       } // if
       
-      $this->renderCalendar($user, lang('user calendar', $user->getDisplayName()), $user->getActiveMilestones());
+      $this->renderCalendar($user, lang('user calendar', $user->getDisplayName()), $user->getActiveMilestones(), $user->getActiveProjects());
+
     } // user_ical
     
     /**
@@ -140,21 +145,24 @@
       $user = $this->loginUserByToken();
       if (!($user instanceof User)) {
         header('HTTP/1.0 404 Not Found');
+        session_write_close();
         die();
       } // if
       
       $project = Projects::findById(array_var($_GET, 'project'));
       if (!($project instanceof Project)) {
         header('HTTP/1.0 404 Not Found');
+        session_write_close();
         die();
       } // if
       
       if (!$user->isProjectUser($project)) {
         header('HTTP/1.0 404 Not Found');
+        session_write_close();
         die();
       } // if
       
-      $this->renderCalendar($user, lang('project calendar', $project->getName()), ProjectMilestones::getActiveMilestonesByUserAndProject($user, $project));
+      $this->renderCalendar($user, lang('project calendar', $project->getName()), ProjectMilestones::getActiveMilestonesByUserAndProject($user, $project), array( $project ));
     } // project_ical
     
     /**
@@ -164,13 +172,35 @@
     * @param array $milestones
     * @return null
     */
-    private function renderCalendar(User $user, $calendar_name, $milestones) {
+    private function renderCalendar(User $user, $calendar_name, $milestones, $user_active_projects) {
       $calendar = new iCalendar_Calendar();
       $calendar->setPropertyValue('VERSION', '2.0');
       $calendar->setPropertyValue('PRODID', '-//Apple Computer\, Inc//iCal 1.5//EN');
       $calendar->setPropertyValue('X-WR-CALNAME', $calendar_name);
       $calendar->setPropertyValue('X-WR-TIMEZONE', 'GMT');
-      
+
+      if (is_array($user_active_projects)) {
+        foreach($user_active_projects as $project) {
+          $assigned_tasks = $project->getUsersTasks(logged_user());
+          if(is_array($assigned_tasks)) {
+            foreach($assigned_tasks as $task) {
+              $todo = new iCalendar_Todo();		   
+              $todo->setPropertyValue('SUMMARY', $project->getName().": ".$task->getText()); 
+              $todo->setPropertyValue('UID', 'TASK'.$task->getId());
+              $date = $task->getDueDate();
+              if (!is_null($date)) {
+                $todo->setPropertyValue('DTSTART', $date->format('Ymd'), array('VALUE' => 'DATE'));
+              }
+              $priority = $task->getTaskList()->getPriority();
+              $priority = $priority ? $priority : 1;
+              $todo->setPropertyValue('PRIORITY', $priority);
+              $todo->setPropertyValue('STATUS', "NEEDS-ACTION");
+              $todo->setPropertyValue('URL', externalUrl($task->getCompleteUrl()));
+              $calendar->addComponent($todo);
+            }
+          }
+        }
+      }      
       if (is_array($milestones)) {
         foreach ($milestones as $milestone) {
           if (!$user->isMemberOfOwnerCompany() && $milestone->isPrivate()) {
@@ -184,9 +214,10 @@
             $event->setPropertyValue('DTSTART', $date->format('Ymd'), array('VALUE' => 'DATE'));
             $date->advance(24 * 60 * 60);
             $event->setPropertyValue('DTEND', $date->format('Ymd'), array('VALUE' => 'DATE'));
-            $event->setPropertyValue('UID', $milestone->getId());
+            $event->setPropertyValue('UID', 'MILESTONE'.$milestone->getId());
             $event->setPropertyValue('SUMMARY', $milestone->getName() . ' (' . $milestone->getProject()->getName() . ')');
             $event->setPropertyValue('DESCRIPTION', $desc = $milestone->getDescription());
+            $event->setPropertyValue('URL', externalUrl($milestone->getViewUrl()));
             /* pre_var_dump($desc); */
             
             $calendar->addComponent($event);
@@ -196,6 +227,7 @@
       
       header('Content-Disposition: inline; filename=calendar.ics');
       $this->renderText(iCalendar::render($calendar), true);
+      session_write_close();
       die();
     } // renderCalendar
     
@@ -211,9 +243,19 @@
     * @return Angie_Feed
     */
     private function populateFeedFromLog(Angie_Feed $feed, $activity_log) {
+      $this->addHelper('textile');  
       if (is_array($activity_log)) {
         foreach ($activity_log as $activity_log_entry) {
-          $item = $feed->addItem(new Angie_Feed_Item($activity_log_entry->getText(), undo_htmlspecialchars($activity_log_entry->getObjectUrl()), '', $activity_log_entry->getCreatedOn()));
+          tpl_assign('object', $activity_log_entry->getObject());
+          if ($activity_log_entry->getObject()) {
+            $object_type = str_replace(" ", "_", strtolower($activity_log_entry->getObject()->getObjectTypeName()));
+            if (file_exists(get_template_path('render_'.$object_type, 'feed'))) {
+              $description = tpl_fetch(get_template_path('render_'.$object_type, 'feed'));
+            } else {
+              $description = tpl_fetch(get_template_path('render_object', 'feed'));
+            }
+          }
+          $item = $feed->addItem(new Angie_Feed_Item($activity_log_entry->getText(), undo_htmlspecialchars($activity_log_entry->getObjectUrl()), $description, $activity_log_entry->getCreatedOn()));
           $taken_by = $activity_log_entry->getTakenBy();
           if ($taken_by instanceof User) {
             $item->setAuthor(new Angie_Feed_Author($taken_by->getDisplayName(), $taken_by->getEmail()));
@@ -234,15 +276,17 @@
       $user = Users::findById(array_var($_GET, 'id'));
       if (!($user instanceof User)) {
         header("HTTP/1.0 404 Not Found");
+        session_write_close();
         die();
       } // if
       
       if (!$user->isValidToken(array_var($_GET, 'token'))) {
         header("HTTP/1.0 404 Not Found");
+        session_write_close();
         die();
       } // if
       
-      CompanyWebsite::instance()->setLoggedUser($user, false, false);
+      CompanyWebsite::instance()->setLoggedUser($user, false, false, false);
       return $user;
     } // loginUserByToken
   

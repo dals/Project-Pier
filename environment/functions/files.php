@@ -61,7 +61,54 @@
       return $default;
     } // if
   } // get_file_line
-  
+
+  /**
+  * Return directories
+  *
+  * @access public
+  * @param string $dir
+  * @param integer $full_path
+  * @return array
+  */
+  function get_dirs($dir, $full_path = true) {
+    // Check dir...
+    if (!is_dir($dir)) {
+      return false;
+    } // if
+    
+    // Prepare input data...
+    $dir = with_slash($dir);
+    // We have a dir...
+    if (!is_dir($dir)) {
+      return null;
+    } // if
+    
+    // Open dir and prepare result
+    $d = dir($dir);
+    $dirs = array();
+    
+    // Loop dir entries
+    while (false !== ($entry = $d->read())) {
+      
+      // Valid entry?
+      if (($entry <> '.') && ($entry <> '..')) {
+      
+        // Get file path...
+        $path = $dir . $entry;
+        
+        // Check if we have a valid directory
+        if (is_dir($path)) {
+          $dirs[] = $full_path ? $path : $entry;
+        } // if
+      } // if
+    } // while
+    
+    // Done... close dir...
+    $d->close();
+    // And return...
+    return count($dirs) > 0 ? $dirs : null;
+  } // get_dirs
+
   /**
   * Return the files from specific directory. This function can filter result
   * by file extension (accepted param is single extension or array of extensions)
@@ -69,7 +116,7 @@
   * @example get_files($dir, array('doc', 'pdf', 'xst'))
   *
   * @param string $dir Dir that need to be scaned
-  * @param mixed $extension Singe or multiple file extensions that need to be
+  * @param mixed $extension Single or multiple file extensions that need to be
   *   mached. If null no check is performed...
   * @param boolean $base_name_only Return only filenames. If this option is set to
   *   false this function will return full paths.
@@ -114,30 +161,30 @@
         
         // If we have valid file that do the checks
         if (is_file($path)) {
-        
-           if (is_null($extension)) {
-             $files[] = $base_name_only ? basename($path) : $path;
-           } else {
-        
-              // Match multiple extensions?
-              if (is_array($extension)) {
-        
-              // If in array add...
-              if (in_array( strtolower(get_file_extension($path)), $extension )) {
-                 $files[] = $base_name_only ? basename($path) : $path;
-              } // if
-          
-              // Match single extension
-              } else {
-        
-                 // If extensions match add...
-                 if (strtolower(get_file_extension($path)) == $extension) {
-                    $files[] = $base_name_only ? basename($path) : $path;
-                 } // if
-          
-              } // if
-        
-            } // if
+        	
+        	if (is_null($extension)) {
+        	  $files[] = $base_name_only ? basename($path) : $path;
+        	} else {
+        	
+        		// Match multiple extensions?
+        		if (is_array($extension)) {
+        			
+        			// If in array add...
+        		  if (in_array( strtolower(get_file_extension($path)), $extension )) {
+        		    $files[] = $base_name_only ? basename($path) : $path;
+        		  } // if
+        		  
+        		// Match single extension
+        		} else {
+        			
+        			// If extensions match add...
+        		  if (strtolower(get_file_extension($path)) == $extension) {
+        		    $files[] = $base_name_only ? basename($path) : $path;
+        		  } // if
+        		  
+        		} // if
+        		
+        	} // if
         
         } // if
         
@@ -221,55 +268,48 @@
   	return rmdir($dir) ? true : false;
   } // end func delete_dir
   
-/**
-* Force creation of all dirs.  
-* @access public
-* @param void
-* @return null
-*/
-function force_mkdir($path, $chmod = null) {
+  /**
+  * Force creation of all dirs
+  *
+  * @access public
+  * @param void
+  * @return null
+  */
+  function force_mkdir($path, $chmod = null) {
+    return mkdir($path, $chmod, true);
+
+    if (is_dir($path)) {
+      return true;
+    } // if
     $real_path = str_replace('\\', '/', $path);
-    if (!isOpenbasedirAllowedPath($real_path))    {
-        return false;
-    }
-    mkdir($real_path, $chmod, true);
-    return is_dir($real_path);
-} // force_mkdir
-
-
-/**
-* Checks wether a given path is accesible with respect to openbase_dir restriction
-*
-* @access public
-* @param void
-* @return null
-*/
-function isOpenbasedirAllowedPath($path)    {
-    $basedirs = explode (PATH_SEPARATOR, ini_get("open_basedir"));
-   
-    // no basedir restrictions
-    if (empty($basedirs)) return true;
-   
-    // check if path is in basedirs
-    foreach ($basedirs as $basedir)          {
-        if (substr($basedir,-1,1) === DIRECTORY_SEPARATOR)    {
-            // open_basedir restricts access to $basedir only, not in its subdirs
-            // remove trailing slash
-            $basedir        = substr($basedir, 0, -1);
-               
-            // if the path points to exactly this strict basedir, then open_basedir restriction permits access
-            if ($basedir === $path)    {
-                return true;
-            }
-        } elseif (substr($path, 0, strlen($basedir)) ===  $basedir)    {
-            // the path is in the allowed basedir
-            return true;
-        }
-    }
-    // path is not in any basedir, so path is forbidden
-    return false;
-} //isOpenbasedirAllowedPath
-
+    $parts = explode('/', $real_path);
+    
+    $forced_path = '';
+    foreach ($parts as $part) {
+      
+      // Skip first on windows
+      if ($forced_path == '') {
+        $start = substr(__FILE__, 0, 1) == '/' ? '/' : '';
+        $forced_path = $start . $part;
+      } else {
+        $forced_path .= '/' . $part;
+      } // if
+      
+      if (!is_dir($forced_path)) {
+        if (!is_null($chmod)) {
+          if (!mkdir($forced_path)) {
+            return false;
+          } // if
+        } else {
+          if (!mkdir($forced_path, $chmod)) {
+            return false;
+          } // if
+        } // if
+      } // if
+    } // foreach
+    
+    return true;
+  } // force_mkdir
   
   /**
   * This function will return true if $dir_path is empty
@@ -329,7 +369,7 @@ function isOpenbasedirAllowedPath($path)    {
   } // insert_before_file_extension
   
   /**
-  * Forward specific file to the browser. Download can be forced (dispolition: attachment) or passed as inline file
+  * Forward specific file to the browser. Download can be forced (disposition: attachment) or passed as inline file
   *
   * @access public
   * @param string $path File path
@@ -363,35 +403,51 @@ function isOpenbasedirAllowedPath($path)    {
   * Was:
   * function download_contents($content, $type, $name, $size, $force_download = false) {
   */
-  function download_contents($content, $type, $name, $size, $force_download = true) {
-  if (connection_status() != 0) return false; // check connection
+  function download_contents($content, $type, $name, $size, $force_download = true, $from_filesystem = false) {
+    if (connection_status() != 0) return false; // check connection
 
-  if ($force_download) {
-
-  /** SAVR 10/20/06
-  * Was:
-  * header("Cache-Control: public");
-  */
-  header("Cache-Control: public, must-revalidate");
-  header("Pragma: hack");
-
-  } else {
-  header("Cache-Control: no-store, no-cache, must-revalidate");
-  header("Cache-Control: post-check=0, pre-check=0", false);
-  header("Pragma: no-cache");
-  } // if
-  header("Expires: " . gmdate("D, d M Y H:i:s", mktime(date("H") + 2, date("i"), date("s"), date("m"), date("d"), date("Y"))) . " GMT");
-  header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-  header("Content-Type: $type");
-  header("Content-Length: " . (string) $size);
-
-  // Prepare disposition
-  $disposition = $force_download ? 'attachment' : 'inline';
-  header("Content-Disposition: $disposition; filename=\"" . $name) . "\"";
-  header("Content-Transfer-Encoding: binary");
-  print $content;
-
-  return((connection_status() == 0) && !connection_aborted());
+    if ($force_download) {
+      /** SAVR 10/20/06
+      * Was:
+      * header("Cache-Control: public");
+      */
+      header("Cache-Control: public, must-revalidate");
+      header("Pragma: hack");
+    } else {
+      header("Cache-Control: no-store, no-cache, must-revalidate");
+      header("Cache-Control: post-check=0, pre-check=0", false);
+      header("Pragma: no-cache");
+    } // if
+    header("Expires: " . gmdate("D, d M Y H:i:s", mktime(date("H") + 2, date("i"), date("s"), date("m"), date("d"), date("Y"))) . " GMT");
+    header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+    header("Content-Type: $type");
+    header("Content-Length: " . (string) $size);
+    // Prepare disposition
+    $disposition = $force_download ? 'attachment' : 'inline';
+    // http://www.ietf.org/rfc/rfc2183.txt
+    $download_name = strtr($name, " ()<>@,;:\\/[]?=*%'\"", '--------------------');
+    $download_name = normalize($download_name);
+    header("Content-Disposition: $disposition; filename=$download_name");
+    header("Content-Transfer-Encoding: binary");
+    if ($from_filesystem) {
+      if (!is_readable($content)) return false;
+      if (!ini_get('safe_mode')) @set_time_limit(0);
+      $chunksize = 1*(1024*1024); // how many bytes per chunk
+      $buffer = '';
+      $handle = fopen($content, 'rb');
+      if ($handle === false) {
+        return false;
+      }
+      while (!feof($handle)) {
+        $buffer = fread($handle, $chunksize);
+        print $buffer;
+        flush();
+      }
+      return fclose($handle);
+    } else {
+      print $content;
+    }
+    return((connection_status() == 0) && !connection_aborted());
   } // download_contents
   
   /**

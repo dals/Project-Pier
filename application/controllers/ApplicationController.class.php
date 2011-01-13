@@ -15,6 +15,7 @@
     * @return null
     */
     function __construct() {
+      trace(__FILE__,'__construct()');
       parent::__construct();
       $this->addHelper('application');
     } // __construct
@@ -40,7 +41,7 @@
     */
 	function canGoOn()
 	{
-		if(!logged_user()->isProjectUser(active_project()))
+		if(active_project() == null || !logged_user()->isProjectUser(active_project()))
 		{
 			flash_error(lang('no access permissions'));
 			$this->redirectTo('dashboard');

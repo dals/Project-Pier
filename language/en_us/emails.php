@@ -7,14 +7,15 @@
     'new comment' => 'New comment',
     'your account created' => 'Your account has been created',
     'your password' => 'Your password',
-    'milestone assigned to you' => 'Milestone has been assigned to you',
+    'milestone assigned to you' => 'A milestone has been assigned to you',
+    'task assigned to you' => 'A task has been assigned to you',
     
     // Interface
     'hi john doe' => 'Hi %s',
     
-    'user password reseted' => 'Your password has been reset. New password is \'%s\'.',
+    'user password reset' => 'Your password has been reset. New password is \'%s\'.',
     
-    'dont reply wraning' => 'THIS IS A SYSTEM NOTIFICATION. DO NOT REPLY TO THIS EMAIL!',
+    'do not reply warning' => 'THIS IS A NOTIFICATION. DO NOT REPLY TO THIS EMAIL.',
     'new message posted' => 'New message "%s" has been posted in the "%s" project',
     'view new message' => 'View that message',
     
@@ -26,6 +27,8 @@
     
     'milestone assigned' => 'Milestone "%s" has been assigned to you',
     'view assigned milestones' => 'View the milestone',
+
+    'task assigned' => 'Task "%s" has been assigned to you',
     
   ); // array
 
