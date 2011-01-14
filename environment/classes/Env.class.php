@@ -234,11 +234,14 @@
     static function getTemplatePath($template, $controller_name = null) {
       trace(__FILE__,"getTemplatePath($template, $controller_name)");
       // Look for template file in core and plugin directories
+      $theme_name = config_option('theme');
+      $template_path_theme = ROOT."/public/assets/themes/$theme_name/templates/$controller_name/$template.php";
+      if (is_readable($template_path_theme)) return $template_path_theme;
       $template_path=APPLICATION_PATH."/views/$controller_name/$template.php";
       if (is_readable($template_path)) return $template_path;
       $template_path_plugin='';
       if ($controller_name) {
-      	$template_path_plugin=APPLICATION_PATH."/plugins/$controller_name/views/$template.php";
+        $template_path_plugin=APPLICATION_PATH."/plugins/$controller_name/views/$template.php";
         if (is_readable($template_path_plugin)) return $template_path_plugin;
       } // if
       trace(__FILE__,"getTemplatePath($template, $controller_name) - can not read [$template_path] or [$template_path_plugin]");
@@ -253,7 +256,12 @@
     * @return string
     */
     static function getLayoutPath($layout) {
-      return APPLICATION_PATH . "/layouts/$layout.php";
+      $theme_name = config_option('theme');
+      $layout_path_theme = ROOT."/public/assets/themes/$theme_name/templates/layout/$layout.php";
+      if (is_readable($layout_path_theme))
+        return $layout_path_theme;
+      else
+        return APPLICATION_PATH . "/layouts/$layout.php";
     } // getLayoutPath
     
     /**
@@ -270,7 +278,7 @@
       if (is_readable($helper_path)) return $helper_path;
       $helper_path_plugin='';
       if ($controller_name) {
-      	$helper_path_plugin=APPLICATION_PATH . "/plugins/$controller_name/helpers/$helper.php";
+        $helper_path_plugin=APPLICATION_PATH . "/plugins/$controller_name/helpers/$helper.php";
         if (file_exists($helper_path_plugin)) return $helper_path_plugin;
       } 
       trace(__FILE__,"getHelperPath($helper, $controller_name) - can not read [$helper_path] or [$helper_path_plugin]");
