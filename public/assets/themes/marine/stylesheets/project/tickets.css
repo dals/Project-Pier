@@ -50,3 +50,5 @@
 #ticket table.properties {
  width: 100%;
 }
+#tickets { margin-bottom: 1em; }
+#tickets th { padding: 4px; border: 1px solid #ccc; }
