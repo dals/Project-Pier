@@ -38,3 +38,7 @@
 #ticket table.properties {
  width: 100%;
 }
+#tickets { margin-bottom: 10px; }
+#tickets table { font-size: 11px; border: 0 none; }
+#tickets td, #tickets th { border: 0 none; }
+#tickets th { background: none; border-bottom: 1px solid #333333; }
