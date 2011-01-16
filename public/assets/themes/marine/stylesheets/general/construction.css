@@ -344,7 +344,7 @@ only IE mac will see this*/
  text-decoration: none;
 }
 
-#crumbs ul li a:hover  {
+#crumbs ul li a:hover, #crumbs ul li a:visited  {
  background: transparent;
  color: #000000;
  text-decoration: none;
