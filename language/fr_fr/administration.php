@@ -54,6 +54,15 @@
     'config option name check_email_unique' => 'Email address must be unique',
     'config option name remember_login_lifetime' => 'Seconds to stay logged in',
     'config option name installation_root' => 'The path to the web site',
+    'config option name dashboard action index' => 'Overview',
+    'config option name dashboard action my_projects' => 'My Projects',
+    'config option name dashboard action my_tasks' => 'My tasks',
+    'config option name dashboard action my_projects_by_name' => 'My Projects - ordered by name',
+    'config option name dashboard action my_projects_by_priority' => 'My Projects - ordered by priority',
+    'config option name dashboard action my_projects_by_milestone' => 'My Projects - ordered by milestone',
+    'config option name dashboard action my_tasks_by_name' => 'My Tasks - ordered by name',
+    'config option name dashboard action my_tasks_by_priority' => 'My Tasks - ordered by priority',
+    'config option name dashboard action my_tasks_by_milestone' => 'My Tasks - ordered by milestone',
 
     // LDAP authentication support
     'config option name ldap_domain' => 'Domaine LDAP',
@@ -91,8 +100,7 @@
     'config option name collation' => 'Character sort order',
 
     'config option name session_lifetime' => 'Durée de la session',
-    'config option name default_controller' => 'Page principale par défaut',
-    'config option name default_action' => 'Default subpage',
+    'config option name default_action' => 'After Login go to',
 
     'config option name logs_show_icons' => 'Montrer les icônes dansShow icons in the application log',
     'config option name default_private' => 'Paramétrage par défaut pour l\'option privé',
