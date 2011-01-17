@@ -234,7 +234,7 @@
     static function getTemplatePath($template, $controller_name = null) {
       trace(__FILE__,"getTemplatePath($template, $controller_name)");
       // Look for template file in core and plugin directories
-      $theme_name = config_option('theme');
+      $theme_name = get_theme_name();
       $template_path_theme = ROOT."/public/assets/themes/$theme_name/templates/$controller_name/$template.php";
       if (is_readable($template_path_theme)) return $template_path_theme;
       $template_path=APPLICATION_PATH."/views/$controller_name/$template.php";
@@ -256,7 +256,7 @@
     * @return string
     */
     static function getLayoutPath($layout) {
-      $theme_name = config_option('theme');
+      $theme_name = get_theme_name();
       $layout_path_theme = ROOT."/public/assets/themes/$theme_name/templates/layout/$layout.php";
       if (is_readable($layout_path_theme))
         return $layout_path_theme;

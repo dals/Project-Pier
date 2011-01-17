@@ -20,10 +20,7 @@
 
   // Init flash!
   Flash::instance();
-  $language = config_option('installation_base_language', 'en_us');
-  if (isset($_SESSION['language'])) {
-    $language = $_SESSION['language'];
-  }
+  $language =  isset($_SESSION['language']) ? $_SESSION['language'] : config_option('installation_base_language', 'en_us');
   Localization::instance()->loadSettings($language, ROOT . '/language');
  
   try {

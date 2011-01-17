@@ -802,7 +802,20 @@
   * @return string
   */
   function get_javascript_url($file_name) {
-    return get_public_url('assets/javascript/' . $file_name);
+    static $theme = null;
+
+    if (is_null($theme)) {
+      if (function_exists('get_theme_name')) {
+        $theme = get_theme_name();
+      } // if
+      if (trim($theme) == '') {
+        $theme = DEFAULT_THEME;
+      } // if
+    } // if
+    if (is_readable(PUBLIC_FOLDER.'/assets/themes/'.$theme.'/javascript/'.$file_name))
+      return get_public_url('assets/themes/'.$theme.'/javascript/' . $file_name);
+    else
+      return get_public_url('assets/javascript/' . $file_name);
   } // get_javascript_url
   
   /**
@@ -816,7 +829,7 @@
     
     if (is_null($theme)) {
       if (function_exists('config_option')) {
-        $theme = config_option('theme');
+        $theme = get_theme_name();
       } // if
       if (trim($theme) == '') {
         $theme = DEFAULT_THEME;
@@ -837,7 +850,7 @@
     
     if (is_null($theme)) {
       if (function_exists('config_option')) {
-        $theme = config_option('theme');
+        $theme = get_theme_name();
       } // if
       if (trim($theme) == '') {
         $theme = DEFAULT_THEME;

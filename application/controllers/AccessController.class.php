@@ -40,23 +40,27 @@
         $this->redirectTo('dashboard');
       } // if
       
+
       $login_data = array_var($_POST, 'login');
+
       if (!is_array($login_data)) {
+        // Set up variables that will facilitate redirecting to
+        // a specified page after logging in.
         $login_data = array();
         foreach ($_GET as $k => $v) {
           if (str_starts_with($k, 'ref_')) {
             $login_data[$k] = $v;
           }
         } // foreach
-      } // if
-      
-      tpl_assign('login_data', $login_data);
-      
-      if (is_array(array_var($_POST, 'login'))) {
+        tpl_assign('login_data', $login_data);
+      } else {
         $username = array_var($login_data, 'username');
         $password = array_var($login_data, 'password');
         $remember = array_var($login_data, 'remember') == 'checked';
-        
+       
+        // Check that the provided username and password
+        // are correct, and log user in if they are.
+
         if (trim($username == '')) {
           tpl_assign('error', new Error(lang('username value missing')));
           $this->render();
@@ -68,12 +72,7 @@
         } // if
         
         $user = Users::getByUsername($username, owner_company());
-        if (!($user instanceof User)) {
-          tpl_assign('error', new Error(lang('invalid login data')));
-          $this->render();
-        } // if
-        
-        if (!$user->isValidPassword($password)) {
+        if (!($user instanceof User) || !$user->isValidPassword($password)) {
           tpl_assign('error', new Error(lang('invalid login data')));
           $this->render();
         } // if
@@ -82,27 +81,31 @@
           trace(__FILE__,"login() - logUserIn($username, $remember)");
           CompanyWebsite::instance()->logUserIn($user, $remember);
           if (isset($_POST['loginLanguage'])) $_SESSION['language'] = $_POST['loginLanguage'];
+          if (isset($_POST['loginTheme'])) $_SESSION['theme'] = $_POST['loginTheme'];
         } catch(Exception $e) {
           tpl_assign('error', new Error(lang('invalid login data')));
           $this->render();
         } // try
         
-        $ref_controller = null;
-        $ref_action = null;
+        // Check whether redirection to a specific
+        // page was requested, and send there.
+        // Otherwise send to default action of the dashboard.
+
+        $ref_controller = isset($login_data['ref_c']) ? $login_data['ref_c'] : null;
+        $ref_action = isset($login_data['ref_a']) ? $login_data['ref_a'] : null;
         $ref_params = array();
         
         foreach ($login_data as $k => $v) {
           if (str_starts_with($k, 'ref_')) {
-            $ref_var_name = trim(substr($k, 4, strlen($k)));
+            $ref_var_name = trim(substr($k, 4));
             switch ($ref_var_name) {
               case 'c':
-                $ref_controller = $v;
-                break;
               case 'a':
-                $ref_action = $v;
-                break;
+                //skip, extracted above
+              break;
               default:
                 $ref_params[$ref_var_name] = $v;
+              break;
             } // switch
           } // if
         } // if
@@ -116,7 +119,8 @@
           trace(__FILE__, 'login() - redirectTo(dashboard)' );
           $this->redirectTo('dashboard');
         } // if
-      } // if
+      }
+      
     } // login
     
     /**
@@ -178,7 +182,7 @@
     function clear_cookies() {
       CompanyWebsite::instance()->logUserOut();
       $this->redirectTo('access', 'login');	
-    } // logout
+    } // clear_cookies
     
     /**
     * Finish the installation - create owner company and administrator

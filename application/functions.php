@@ -340,6 +340,35 @@
     return $object instanceof DataObject ? $object : null;
   } // get_object_by_manager_and_id
 
+  function get_theme_name() {
+    static $theme;
+    if (empty($theme)) {
+      $theme = isset($_SESSION['theme']) ? $_SESSION['theme'] : config_option('theme');
+    }
+    return $theme;
+  }
+
+  function get_available_themes() {
+    $themes = array();
+    $themes_dir = with_slash(THEMES_DIR);
+    
+    if (is_dir($themes_dir)) {
+      $d = dir($themes_dir);
+      while (($entry = $d->read()) !== false) {
+        if (str_starts_with($entry, '.')) {
+          continue;
+        } // if
+        
+        if (is_dir($themes_dir . $entry)) {
+          $theme = new SimpleXmlElement(file_get_contents($themes_dir . $entry.'/theme.xml'));
+          $themes[$entry] = $theme->name;
+        } // if
+      } // while
+      $d->close();
+    } // if
+    return $themes;
+  }
+
   /**
   * This function will return duration in secs in weeks, days, hours, minutes and seconds
   *
