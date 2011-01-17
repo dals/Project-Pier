@@ -63,8 +63,9 @@
         </li>
         <li>
           <label for="loginTheme"><?php echo lang('theme'); ?></label><select name="loginTheme" id="loginTheme">
-            <option selected="selected" value="marine">Marine</option>
-            <option value="default">default</option>
+            <?php foreach (get_available_themes() as $theme => $theme_name): ?>
+            <option<?php if (get_theme_name() == $theme) echo ' selected="selected"'; ?> value="<?php echo $theme ?>"><?php echo $theme_name ?></option>
+            <?php endforeach ?>
           </select>
         </li>
      </ul>
