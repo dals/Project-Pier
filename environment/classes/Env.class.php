@@ -257,7 +257,7 @@
     */
     static function getLayoutPath($layout) {
       $theme_name = get_theme_name();
-      $layout_path_theme = ROOT."/public/assets/themes/$theme_name/templates/layout/$layout.php";
+      $layout_path_theme = ROOT."/public/assets/themes/$theme_name/templates/layouts/$layout.php";
       if (is_readable($layout_path_theme))
         return $layout_path_theme;
       else
