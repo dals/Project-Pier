@@ -62,11 +62,13 @@ ul  {
 }
 
 /** Form **/
-label  {
+label, #loginOptionsLink a {
  margin: 3px 0;
  font-weight: bold;
  display: block;
 }
+#loginOptionsLink { margin: 3px 0 7px; }
+#loginOptionsLink a { display: inline; }
 
 label.checkbox  {
  margin: 0px;
@@ -116,6 +118,7 @@ input.short  {
 input.medium  {
  width: 150px;
 }
+#loginPasswordDiv input.medium { width: 156px; }
 
 input.long  {
  width: 320px;
@@ -139,7 +142,6 @@ textarea.short  {
 
 input, textarea, select  {
  border: 1px solid #CCC;
- background-image: url(../images/layout/bg_inputs.png);
  background-repeat: no-repeat;
  padding: 2px;
  font-family: calibri, tahoma, verdana, arial, helvetica, sans-serif;
@@ -169,15 +171,6 @@ span.required  {
  color: #FF0000;
  font-size: 90%;
 }
-
-#formErrors  {
- border: 1px solid #EFCAB8;
- background-color: #F9ECE6;
- background-image: url(../images/layout/bg_alert.png);
- background-repeat: repeat-x;
- padding: 5px;
-}
-
 #success  {
  margin-bottom: 10px;
  padding: 5px;
@@ -211,6 +204,8 @@ span.required  {
  width: 362px;
  font-size: 12px;
  text-align: left;
+ box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -webkit-box-shadow: 0 0 10px #000;
+ border-radius: 15px; -moz-border-radius: 15px; -webkit-border-radius: 15px;
 }
 
 #dialog h1  {
@@ -235,14 +230,11 @@ span.required  {
 
 #loginSubmit  {
  text-align: right;
- margin-right: 8px;
  margin-bottom: 10px;
 }
 
 .hidden  {
- position: relative;
  display: none;
- left: -999em;
 }
 
 #loginOptionsLink  {
@@ -267,5 +259,12 @@ span.required  {
 ul li  {
  margin: 0;
  padding: 0;
-}
-
+}
+.flash-message { padding: 5px; cursor: pointer; }
+.flash-message p { float: left; }
+#error { background: #f9ece6; border: 1px solid #efcab8; }
+#success {}
+.hide-flash { visibility: hidden; float: right; }
+#error .hide-flash { color: #cda896; }
+.clear { clear: both; }
+#options1 li, #options2 li { margin: 10px 0 15px; }

@@ -7,6 +7,7 @@
     'password again' => 'Repeat password',
     'old password' => 'Old password',
     'remember me' => 'Remember me for %s',
+    'remember me no duration' => 'Remember me',
     'clear cookies' => 'Clear cookies',
     'email address' => 'Email address',
     'display name' => 'Display name',

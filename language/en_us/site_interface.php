@@ -67,7 +67,7 @@
     'check for upgrade now' => 'Check now',
     
     // Forgot password
-    'forgot password' => 'Forgot password',
+    'forgot password' => 'Forgot your password?',
     'email me my password' => 'Send password',
     
     // Complete installation

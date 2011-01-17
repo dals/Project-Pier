@@ -7,6 +7,7 @@
     'password again' => 'Confirmation du mot de passe',
     'old password' => 'Ancien mot de passe',
     'remember me' => 'Se souvenir de moi pendant %s',
+    'remember me no duration' => 'Se souvenir de moi',
     'clear cookies' => 'Effacer les cookies',
     'email address' => 'Addresse de messagerie',
     'display name' => 'Nom affiché',

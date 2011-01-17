@@ -1023,6 +1023,7 @@
     'register' => 'Registreer',
     'related project form object dnx' => 'Gekoppeld formulierobject bestaat niet in de database',
     'remember me' => 'Onthoud me %s',
+    'remember me no duration' => 'Onthoud me',
     'remove attach file control' => 'Verwijder',
     'remove company from project' => 'Uit project werwijderen',
     'remove user from project' => 'Uit project verwijderen',

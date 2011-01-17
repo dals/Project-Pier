@@ -1022,6 +1022,7 @@
     'register' => 'Registrieren',
     'related project form object dnx' => 'Das gesuchte Formularobjekt gibt es nicht in der Datenbank.',
     'remember me' => 'Für 14 Tage erinnern',
+    'remember me no duration' => 'Erinnern',
     'remove attach file control' => 'Entfernen',
     'remove company from project' => 'Vom Projekt entfernen',
     'remove user from project' => 'Vom Projekt entfernen',

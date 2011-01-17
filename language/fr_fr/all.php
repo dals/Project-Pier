@@ -1013,6 +1013,7 @@
     'register' => 'Register',
     'related project form object dnx' => 'Related form object does not exist in database',
     'remember me' => 'Se souvenir de moi pendant %s',
+    'remember me no duration' => 'Se souvenir de moi',
     'remove attach file control' => 'Supprimer le fichier',
     'remove company from project' => 'Retirer la société du projet',
     'remove user from project' => 'Remove from project',

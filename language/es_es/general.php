@@ -7,6 +7,7 @@
     'password again' => 'Repetir contraseña',
     'old password' => 'Contraseña anterior',
     'remember me' => 'Recordarme por %s',
+    'remember me no duration' => 'Recordarme',
     'clear cookies' => 'Eliminar cookies',
     'email address' => 'Dirección de correo',
     'display name' => 'Nombre a desplegar',
