@@ -11,12 +11,13 @@
   if ($task_list->canDelete(logged_user())) {
     $task_list_options[] = '<a href="' . $task_list->getDeleteUrl() . '">' . lang('delete') . '</a>';
   } // if
-  if ($task_list->canAddTask(logged_user())) {
-    $task_list_options[] = '<a href="' . $task_list->getAddTaskUrl() . '">' . lang('add task') . '</a>';
-  } // if
   if ($task_list->canReorderTasks(logged_user())) {
     $task_list_options[] = '<a href="' . $task_list->getReorderTasksUrl($on_list_page) . '">' . lang('reorder tasks') . '</a>';
-  } // if
+    $can_reorder_tasks = true;
+  } else {
+    $can_reorder_tasks = false;
+  }// if
+
   if ($cc = $task_list->countComments()) {
     $task_list_options[] = '<span><a href="'. $task_list->getViewUrl() .'#objectComments">'. lang('comments') .'('. $cc .')</a></span>';
   }
@@ -60,30 +61,35 @@
         <li id="<?php echo $task->getId() ?>" class="<?php odd_even_class($task_list_ln) ?>"><!--tr class="<?php odd_even_class($task_list_ln); ?>"-->
           <!-- Task text and options -->
           <!--td class="taskText"-->
-            <div class="task-text"><?php echo do_textile($task->getText()) ?></div>
+            <div class="task-text">
+            <?php echo $task->getText() ?>
+            <?php if ($task->getAssignedTo()):?>
+            <span class="assignedTo"><?php echo clean($task->getAssignedTo()->getObjectName()) ?></span>
+            <?php endif ?>
+            </div>
             <?php if (!is_null($task->getDueDate())) { ?>
             <div class="dueDate"><span><?php echo lang('due date') ?>:</span> <?php echo ($task->getDueDate()->getYear() > DateTimeValueLib::now()->getYear()) ? format_date($task->getDueDate(), null, 0) : format_descriptive_date($task->getDueDate(), 0) ?></div>
             <?php } // if ?>
+
+
             <?php
             $task_options = array();
-            if ($task->getAssignedTo()) { 
-              $task_options[] = '<span class="assignedTo">' . clean($task->getAssignedTo()->getObjectName()) . '</span>';
-            } // if
+            if ($can_reorder_tasks) { $task_options[] = '<span class="reorder"><img src="'.get_image_url('icons/arrow-sort.png').'" /></span>'; }
             if ($task->canEdit(logged_user())) {
-              $task_options[] = '<a href="' . $task->getEditUrl() . '">' . lang('edit') . '</a>';
+              $task_options[] = '<a href="' . $task->getEditUrl() . '"><img width="16" height="16" src="' . get_image_url('icons/pencil.png') . '" alt="'.lang('edit') .'" title="'.lang('edit').'" /></a>';
             } // if
             if ($task->canDelete(logged_user())) {
-              $task_options[] = '<a href="' . $task->getDeleteUrl() . '">' . lang('delete') . '</a>';
+              $task_options[] = '<a href="' . $task->getDeleteUrl() . '"><img src="'.get_image_url('icons/delete.png'). '" alt="'. lang('delete') . '" title="'.lang('delete').'" /></a>';
             } // if
             if ($task->canView(logged_user())) {
-              $task_options[] = '<a href="' . $task->getViewUrl($on_list_page) . '">' . lang('view') . '</a>';
+              $task_options[] = '<a href="' . $task->getViewUrl($on_list_page) . '"><img src="'.get_image_url('icons/comment_add.png').'" alt="' . lang('view') . '" title="" /></a>';
             } // if
             if ($cc = $task->countComments()) {
               $task_options[] = '<a href="' . $task->getViewUrl() .'#objectComments">'. lang('comments') .'('. $cc .')</a>';
             }
             if ($task->canChangeStatus(logged_user())) {
               if ($task->isOpen()) {
-                $task_options[] = '<a href="' . $task->getCompleteUrl() . '">' . lang('mark task as completed') . '</a>';
+                $task_options[] = '<a href="' . $task->getCompleteUrl() . '"><img src="'.get_image_url('icons/tick.png'). '" alt="' . lang('mark task as completed') . '" title="'.lang('mark task as completed').'" /></a>';
               } else {
                 $task_options[] = '<span>' . lang('open task') . '</span>';
               } // if
@@ -100,7 +106,11 @@
     <?php else: ?>
     <?php echo lang('no open task in task list') ?>
     <?php endif ?>
-
+    <?php if ($task_list->canAddTask(logged_user())): ?>
+    <div class="add-task-box">
+      <div class="add-task-link"><a href="javascript:void(0)"><?php echo lang('add task') ?></a></div>
+    </div>
+    <?php endif ?>
     <?php if (is_array($task_list->getCompletedTasks())) { ?>
     <div class="completedTasks">
       <?php echo $on_list_page ? lang('completed tasks') : lang('recently completed tasks') ?>:

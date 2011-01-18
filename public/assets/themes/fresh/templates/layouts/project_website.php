@@ -21,8 +21,13 @@
     <script>
     jQuery(function($) {
       $('#objectComments legend:first').click(function () { $(this).next().slideDown(); });
+      $('.openTasks ul li').hover(
+        function() { $(this).css('background-color', '#e2e2e2'); },
+        function() { $(this).css('background-color', '#f5f5f5'); }
+      );
       $('.openTasks ul').sortable({
-        handle: 'span.assignedTo',
+        placeholder: "ui-state-highlight",
+        handle: 'span.reorder',
         update:
           function(event, ui) {
             var task_list_id = $(this).attr('id');
