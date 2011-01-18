@@ -13,7 +13,9 @@ div.taskList .desc  {
 div.taskList .openTasks, .taskList .completedTasks  {
  margin: 10px;
 }
+div.openTasks ul { list-style: none; margin: 0; padding: 0; }
 
+div.openTasks ul li span.assignedTo { cursor: move; }
 div.taskList td.taskCheckbox  {
  padding-top: 4px;
  width: 20px;

@@ -38,6 +38,40 @@
       $this->setSidebar(get_template_path('index_sidebar', 'task'));
     } // index
 
+    // reorders tasks within a list based on an ajax request.
+    // error handling is done by just ignoring the request,
+    // since it is not a really important thing to not
+    // end up with the right order
+
+    function reorder() {
+      $task_list_id = array_var($_GET, 'task_list_id', null);
+      if (!$task_list->canReorderTasks(logged_user())) exit;
+      if (empty($task_list_id)) {
+        exit;
+      } else {
+        $task_list = ProjectTaskLists::findById($task_list_id);
+        $open_tasks = $task_list->getOpenTasks();
+        $order = array_flip(explode(',', array_var($_GET, 'order', array())));
+        if (count($open_tasks) != count($order)) {
+          exit;
+        } else {
+          foreach ($open_tasks as $task)
+          {
+            if (!isset($order[$task->getId()]))
+            {
+              exit;
+            } else {
+              $task->setOrder($order[$task->getID()]);
+            }
+          }
+          foreach ($open_tasks as $task) {
+            $task->save();
+          }
+          exit;
+        }
+      }
+    }
+
     /**
     * Download task list as attachment
     *
