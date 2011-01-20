@@ -10,16 +10,19 @@
 <?php echo render_page_head() ?>
   </head>
   <body>
-    <div id="dialog">
-      <h1><?php echo get_page_title() ?></h1>
-      <?php foreach (array('success', 'error') as $message_type): if (!is_null(flash_get($message_type))): ?>
-      <div class="flash-message" id="<?php echo $message_type ?>">
-        <p><?php echo clean(flash_get($message_type)) ?></p>
-        <div class="hide-flash">x</div>
-        <div class="clear"></div>
+    <div style="margin: 150px auto; width: 414px; 1text-align: center;">
+      <img src="public/files/logo.png" style="margin: 0 auto 10px;" />
+      <div id="dialog">
+        <h1><?php echo get_page_title() ?></h1>
+        <?php foreach (array('success', 'error') as $message_type): if (!is_null(flash_get($message_type))): ?>
+        <div class="flash-message" id="<?php echo $message_type ?>">
+          <p><?php echo clean(flash_get($message_type)) ?></p>
+          <div class="hide-flash">x</div>
+          <div class="clear"></div>
+        </div>
+        <?php endif; endforeach; ?>
+        <?php echo $content_for_layout ?>
       </div>
-      <?php endif; endforeach; ?>
-      <?php echo $content_for_layout ?>
     </div>
   </body>
 </html>

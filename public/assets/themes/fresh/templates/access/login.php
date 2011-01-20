@@ -1,15 +1,13 @@
 <?php trace(__FILE__,'begin') ?>
 <?php set_page_title(lang('login')) ?>
 <?php trace(__FILE__,'get_url') ?>
+
 <form action="<?php echo get_url('access', 'login') ?>" method="post">
 
 <?php trace(__FILE__,'form_errors') ?>
 <?php tpl_display(get_template_path('form_errors')) ?>
 
 <div class="container">
-  <?php $installation_welcome_logo = config_option('installation_welcome_logo', ''); if ('' != trim($installation_welcome_logo)): ?>
-  <div><?php echo $installation_welcome_logo ?></div>
-  <?php endif ?>
   <div class="left">
     <div id="loginUsernameDiv">
       <label for="loginUsername"><?php echo lang('username') ?>:</label>
