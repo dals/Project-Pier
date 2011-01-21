@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `{$tp}project_ticket_subscriptions` (
         DB::execute("DROP TABLE IF EXISTS `".TABLE_PREFIX."project_tickets`;");
         DB::execute("DROP TABLE IF EXISTS `".TABLE_PREFIX."project_ticket_changes`;");
         DB::execute("DROP TABLE IF EXISTS `".TABLE_PREFIX."project_ticket_subscriptions`;");
-        DB::execute("DELETE FROM `".TABLE_PREFIX."application_logs` where rel_object_manager='tickets';");
+        DB::execute("DELETE FROM `".TABLE_PREFIX."application_logs` where rel_object_manager='ProjectTickets';");
         // TODO delete permissions
     }
   }

@@ -104,6 +104,7 @@ CREATE TABLE IF NOT EXISTS `{$tp}project_times` (
       // maybe just rename table to xxx_del
       // DB::execute("RENAME TABLE `{$pf}project_times` TO `{$pf}project_times_del` ;
       DB::execute("DROP TABLE IF EXISTS `{$tp}project_times`;");
+      DB::execute("DELETE FROM `".TABLE_PREFIX."application_logs` WHERE rel_object_manager='ProjectTimes';");
       // TODO delete config options
       // TODO delete permission options
     }
