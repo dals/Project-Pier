@@ -58,13 +58,29 @@
       } // if
       
       $pubdate = $item->getPublicationDate();
+      $timestamp = NULL;
       if ($pubdate instanceof DateTimeValue) {
         $result .= '<pubdate>' . $pubdate->toRSS() . "</pubdate>\n";
+        $timestamp = $pubdate->getTimestamp();
       } // if
+      $result .= '<guid>' . $this->buildGuid(clean($item->getLink()), $timestamp) . "</guid>\n";
       
       $result .= '</item>';
       return $result;
     } // renderItem
+    
+    /**
+    * Create a guid
+    *
+    * @param string $url
+    * @param int $timestamp
+    * @return string
+    */
+    private function buildGuid($url, $timestamp) {
+      $url = preg_replace('/&amp;\d*&amp;/', '&amp;', $url); // remove non-constant parameter
+      if (!is_null($timestamp)) $url .= "&amp;time_id=" . $timestamp;
+      return $url;
+    }
   
   } // Angie_Feed_Renderer_RSS2
 
